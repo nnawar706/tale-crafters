@@ -4,6 +4,9 @@ import { v } from "convex/values"
 export default defineSchema({
     stories: defineTable({
         user: v.id('users'),
+        author: v.string(),
+        authorId: v.string(),
+        authorImageUrl: v.string(),
         title: v.string(),
         detail: v.string(),
         imagePrompt: v.string(),
@@ -15,7 +18,9 @@ export default defineSchema({
         voiceType: v.string(),
         audioDuration: v.number(),
         views: v.number(),
-    }),
+    })
+    .searchIndex('search_author', { searchField: 'author' })
+    .searchIndex('search_title', { searchField: 'title' }),
 
     users: defineTable({
         clerkId: v.string(),
