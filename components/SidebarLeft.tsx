@@ -15,7 +15,7 @@ const SidebarLeft = () => {
     return (
         <section className="sticky left-0 top-0 w-fit flex flex-col justify-between 
         border-none bg-black-1 pt-8 text-white-1 
-        max-md:hidden lg:w-[270px] lg:pl-8">
+        max-md:hidden lg:w-[270px] lg:px-8">
             <nav className="flex flex-col gap-5">
                 <Link href="/" className="flex cursor-pointer items-center gap-1 pb-10
                 max-lg:justify-center">
@@ -29,7 +29,7 @@ const SidebarLeft = () => {
                     return (
                         <Link href={item.route} key={item.label}
                         className={cn("flex gap-3 items-center py-4 max-lg:px-4 justify-center lg:justify-start", {
-                            "bg-nav-focus border-r-4 border-orange-1": isActive
+                            "bg-nav-focus border-b-2 border-orange-1": isActive
                         })}>
                             <Image src={item.imgUrl} alt={item.label} width={24} height={24}/>
                             <p>{item.label}</p>
