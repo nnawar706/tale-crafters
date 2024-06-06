@@ -1,11 +1,14 @@
 "use client"
 
+import GenerateStory from '@/components/GenerateStory'
+import GenerateThumbnail from '@/components/GenerateThumbnail'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { voices } from '@/constants'
+import { Id } from '@/convex/_generated/dataModel'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader } from 'lucide-react'
 import React, { useState } from 'react'
@@ -18,8 +21,18 @@ const formSchema = z.object({
 })
 
 const Create = () => {
-  const [selectedVoice, setSelectedVoice] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState<boolean>(false)
+  const [selectedVoice, setSelectedVoice]   = useState<string | null>(null)
+  const [voicePrompt, setVoicePrompt]       = useState<string>('')
+
+  const [imagePrompt, setImagePrompt]       = useState<string>('')
+  const [imageUrl, setImageUrl]             = useState<string>('')
+  const [imageStorageId, setImageStorageId] = useState<Id<'_storage'> | null>(null)
+  
+  const [audioUrl, setAudioUrl]             = useState<string>('')
+  const [audioStorageId, setAudioStorageId] = useState<Id<'_storage'> | null>(null)
+  const [audioDuration, setAudioDuration]   = useState<number>(0)
+  
+  const [submitting, setSubmitting]         = useState<boolean>(false)
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -83,7 +96,7 @@ const Create = () => {
                 <FormItem className="flex flex-col gap-2">
                   <FormLabel className="text-16 font-bold text-white-1">Script</FormLabel>
                   <FormControl>
-                    <Textarea className="input-class focus-visible:ring-offset-orange-1" placeholder="Write a short podcast description" {...field} />
+                    <Textarea className="input-class focus-visible:ring-offset-orange-1" placeholder="Write Your Tale" {...field} />
                   </FormControl>
                   {/* <FormMessage className="text-white-1"/> */}
                 </FormItem>
@@ -93,20 +106,32 @@ const Create = () => {
 
           <div className="flex flex-col pt-10">
             
+            <div className="flex flex-col pt-10">
+              <GenerateStory
+                setAudioStorageId={setAudioStorageId}
+                audio={audioUrl}
+                setAudio={setAudioUrl}
+                voiceType={selectedVoice}
+                voicePrompt={voicePrompt}
+                setVoicePrompt={setVoicePrompt}
+                setAudioDuration={setAudioDuration}
+              />
 
+              <GenerateThumbnail/>
 
-            <div className="mt-10 w-full">
-              <Button type="submit" className="text-16 w-full rounded-[10px] bg-orange-1 py-4 font-bold text-white-1 transition-all duration-500 hover:bg-black-1">
-                {
-                  submitting ? (
-                    <>
-                      Submiting <Loader size={20} className="animate-spin ml-2"/>
-                    </>
-                  ) : (
-                    'Submit & Publish'
-                  )
-                }
-              </Button>
+              <div className="mt-10 w-full">
+                <Button type="submit" className="text-16 w-full rounded-[10px] bg-orange-1 py-4 font-bold text-white-1 transition-all duration-500 hover:bg-black-1">
+                  {
+                    submitting ? (
+                      <>
+                        <Loader size={20} className="animate-spin mr-2"/> Submiting...
+                      </>
+                    ) : (
+                      'Submit & Publish'
+                    )
+                  }
+                </Button>
+              </div>  
             </div>
           </div>
         </form>
